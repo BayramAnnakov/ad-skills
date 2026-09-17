@@ -1,0 +1,27 @@
+{
+  "name": "video-ads-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts",
+    "package": "bash scripts/package.sh",
+    "test:runway": "node --test runway/test/rw.test.mjs",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.277",
+    "@remotion/google-fonts": "4.0.277",
+    "@remotion/media-utils": "4.0.277",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.277"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
