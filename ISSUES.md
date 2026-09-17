@@ -154,3 +154,15 @@ files; rows it found overstated were corrected below and in the round-2 table.
 - No complete new-account run through a live launch and a results read exists yet: the re-run went through production
   and a test plan with an assumed cost range, then stopped (no ad account, no spend).
 - The two-second read and "a better ad" remain judgements until a cold-viewer check and a live screen run.
+
+## Round 3: stranger test against the PUBLISHED repository, 2026-09-17
+
+One failure that every earlier run missed, because every earlier run had `node_modules` on disk.
+
+| ID | Issue | Resolution | Verified by |
+|---|---|---|---|
+| S1 | `video-ads/SKILL.md` pointed the reader at `template/node_modules/remotion/LICENSE.md` for the Remotion terms. That path does not exist in a fresh clone: `node_modules` is correctly gitignored, so the file only appears after `npm ci`. The local verifier passed because the author's working copy had the dependency installed | Reworded to say the terms ship with the dependency and appear after `npm ci`, without presenting an in-package path that is not in the package | `git clone` of the public repo into a temp directory, then `scripts/verify-package.sh` - failed before the change, passes after. The check itself was left strict on purpose: a future `template/node_modules/...` reference should still fail |
+
+**The lesson, and it is the reason this section exists:** a package verifier run in the directory where the
+package was built cannot see what is missing from the package. Run it against a fresh clone of the
+published artifact.

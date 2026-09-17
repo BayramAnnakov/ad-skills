@@ -95,7 +95,8 @@ and the failures behind them are in `references/`.
 Requirements: Node 18+, ffmpeg, ffprobe and shasum, network access on the first render (Chrome Headless Shell and
 Google Fonts download; `npm ci` may warn that esbuild's install script is not allow-listed, which does not stop
 rendering). Remotion's free license covers individuals, for-profit companies with up to 3 employees, non-profits
-and evaluation; other companies need a Remotion company license (`template/node_modules/remotion/LICENSE.md`).
+and evaluation; other companies need a Remotion company license. The full terms ship with the dependency, so they appear
+after `npm ci`, at `node_modules/remotion/LICENSE.md` inside your copy of the template.
 
 ## Done means
 
