@@ -166,3 +166,18 @@ One failure that every earlier run missed, because every earlier run had `node_m
 **The lesson, and it is the reason this section exists:** a package verifier run in the directory where the
 package was built cannot see what is missing from the package. Run it against a fresh clone of the
 published artifact.
+
+## Round 4: a gap found after publishing, 2026-09-17
+
+| ID | Issue | Resolution | Verified by |
+|---|---|---|---|
+| P1 | **The package shipped with no way to read a competitor's live ads.** The only occurrence of the word "competitor" in the three skills was a copy-policy line in `ADS.md` about not bashing them. `newsjack-ads` scanned the news and the audience's own channels, and treated "what is live" as the owner's own campaign record. So the one free source that shows what somebody else is paying to keep running was absent, and it is a stage-1 source: it tells you which shapes survive in a category and which mechanisms a live competitor already owns | New `newsjack-ads/references/ad-libraries.md` with three routes cheapest first (the public Meta Ad Library needs no account; the Meta Ads MCP library search is free; paid transparency endpoints cover the Google, LinkedIn, Snapchat, TikTok and Twitter libraries), plus the grouping rule and the ordering limit. New step 2b in `newsjack-ads/SKILL.md`, no existing step renumbered. Routes, key location and price per request come from `ADS.md`, which also now carries a "competitors to watch" line | `verify-package.sh`, plus a fresh clone of the published repo |
+
+**The substance of the fix, not just its location.** The heuristic people arrive with is "a competitor's
+longest-running creative is its winner". It only holds for advertisers who keep single ads running.
+Measured in one category: one page was running 25 near-identical ads of the same product, another had
+spawned seven copies of one ad within six seconds. So the skill now requires grouping by page and by
+creative concept before any claim about longevity, and reporting the span of the group. It also requires
+labelling that span a **floor** unless the results were paged through, because these endpoints return
+newest first with no duration sort, so one page of a thousand-match query always looks like nothing older
+is running.

@@ -5,7 +5,7 @@ Three skills for small teams and solo founders who make their own paid social ad
 
 | Skill | Use it to | Hands off to |
 |---|---|---|
-| `newsjack-ads` | Find a news story your audience saw this week, match it to something literally true about your product, and get approved ad spines | `video-ads` |
+| `newsjack-ads` | Find a news story your audience saw this week, read what competitors are actually running, match either to something literally true about your product, and get approved ad spines | `video-ads` |
 | `video-ads` | Turn a brief or a spine into upload-ready vertical videos and statics, checked automatically and through a publication gate | `ad-test-loop` |
 | `ad-test-loop` | Plan what a test can answer for its budget, launch without silent defaults, read results without fooling yourself | back to the other two |
 

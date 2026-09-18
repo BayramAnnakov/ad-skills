@@ -5,6 +5,9 @@ description: |
   the dry "Foldable since 1843" style: a headline that rides the story without naming it, resting on something
   literally true about the product. Use when the user says "newsjack", "ньюсджек", "ad on today's news", "реклама на
   инфоповоде", "Economist-style ad", "what's in the news we can use for ads", or asks for a regular news-to-ad scan.
+  Also scans competitors' live ads in the public ad libraries, so use it for "what are our competitors
+  running", "check the ad library", "which of their creatives have been running longest", "конкуренты
+  реклама", or any request to read somebody else's live ads for the shapes that survive in a category.
   Produces a verified report with sourced stories, a property bank, approved video spines and a first-test pick.
   Production goes to video-ads and launch to ad-test-loop; this skill does not generate paid assets or launch.
 ---
@@ -15,7 +18,8 @@ Find what the audience talked about this week, match one story to something lite
 write a short ad whose headline carries the joke without naming the news. The ad must still tell a stranger what is
 sold and why it matters to them. Deliver within 24-48 hours of the spike, with a stop date.
 
-Read `references/worked-example.md` once (a real run, including what went wrong) and `references/lessons.md`.
+Read `references/worked-example.md` once (a real run, including what went wrong) and
+`references/lessons.md`. Before any competitor scan, read `references/ad-libraries.md`.
 
 ## Inputs
 
@@ -58,6 +62,28 @@ test pick comes from those (step 6). Cover the topics the audience follows and *
 (read the channels by handle; name search often fails). A spike = several major outlets within a day or two, and
 the audience would recognise it from a four-word paraphrase. Keep a table: story, date, sources opened, sources seen
 as headline only, which audience outlets carried it.
+
+### 2b. Scan the competitors' live ads
+
+A separate source from the news, and the only free one that shows what somebody else is paying to keep
+running. Read `references/ad-libraries.md` first; the routes and their costs come from `ADS.md`.
+
+Cheapest route that answers the question: the public Meta Ad Library needs no account at all, the Meta Ads
+MCP's library search is free if your agent has it, and the paid transparency endpoints are for the libraries
+Meta does not cover. A paid call needs a stated price and a yes for that run, like any other.
+
+**Group by page and by creative concept before you say anything about longevity**, then report
+`pages · distinct concepts · longest span in days for one concept`. The heuristic that a competitor's
+longest-running creative is its winner only holds for advertisers who keep single ads running; measured in
+one category, one page ran 25 near-identical ads of the same product and another spawned seven copies of one
+ad within six seconds. Age is a property of the ad object, not of the concept.
+
+**Label the span a floor unless you paged through the results.** These endpoints return newest first with no
+duration sort, so one page of results from a query with thousands of matches always looks like nothing older
+is running.
+
+Two outputs feed the rest of the run: the shapes that survive in this category, which go to step 3, and any
+mechanism a live competitor ad already owns, which is taken. Borrow the shape, never the execution.
 
 ### 3. Match by structure, not keywords
 Name each story's shape first, then find a bank property with the same shape. The shape is about the structure of the

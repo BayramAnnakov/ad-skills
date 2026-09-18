@@ -38,3 +38,8 @@
 - Independent reviewers (which ones, how to run them in a sandbox, fallback order, reviewer budget or quota):
 - Analytics (web analytics property, backend tables for leads/payments, scripts):
 - Ad accounts (platform, account notes file; no secrets here):
+- Ad libraries, for competitors' live ads: the public Meta Ad Library (`facebook.com/ads/library`) needs no
+  account; the Meta Ads MCP's library search is free if the agent has it; paid transparency endpoints cover
+  the Google, LinkedIn, Snapchat, TikTok and Twitter libraries. Record which route, where the key lives and
+  the price per request here, because a paid call needs a yes for that run.
+- Competitors to watch: the page names or handles worth reading, and the phrases a buyer would search for.
