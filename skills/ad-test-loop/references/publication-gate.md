@@ -71,3 +71,10 @@ whether it is documentary, illustrative or reconstructed.
 Neither a model reviewer nor the author can tell whether a stranger gets the joke in two seconds. Show the final file
 at phone size to at least one person from outside the project, with no explanation, and record what they understood
 after 1 s, 3 s and at the end.
+
+**If no human is available**, a panel of isolated persona agents shown the final file is a partial stand-in: it
+unblocks a screen-level launch and never replaces the human check before scaling. Ask it what is being sold, what is
+promised and what category the ad seems to belong to. **Never ask it to rank or to score.** Measured on four
+personas over five live creatives: one of four produced the true order on the only fair comparison, while all four
+agreed on what was broken and three of those agreements were independently confirmable. The method and its two
+failure modes are in the video-ads skill, `references/synthetic-panel.md`.

@@ -21,5 +21,6 @@ Hand this to ad-test-loop. Nothing in it is live until someone launches it on an
 - [ ] Synthetic media is obviously illustrative, or labelled
 - [ ] Platform special categories considered: <result>
 - [ ] Every date and price line has a stop date
-- [ ] Cold-viewer check: <who, what they understood at 1 s / 3 s / end>
+- [ ] Cold-viewer check: <who, what they understood at 1 s / 3 s / end>. A synthetic panel counts only as
+      "synthetic panel only, human check not done", and only unblocks a screen, never scaling
 - [ ] Independent review: <which reviewers ran, or why none>; triage file: <path>

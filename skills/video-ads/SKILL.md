@@ -71,8 +71,11 @@ and the failures behind them are in `references/`.
    size and ask of each beat: does the action the line names happen in this frame?
 6. **Cold-viewer check.** Show the final file to someone outside the project, without explanation, at phone size.
    Write down what they understood after 1 s, after 3 s, and at the end: the problem, why it matters to them, what is
-   sold, what to do next. A gap is a defect to fix, not a note. If nobody outside the project is available, record
-   "cold-viewer check not done", launch only as a screen (ad-test-loop), and run the check before scaling.
+   sold, what to do next. A gap is a defect to fix, not a note. If nobody outside the project is available, run a
+   **synthetic panel** (`references/synthetic-panel.md`): isolated persona agents, shown the final file, asked what
+   is being sold and what confuses them, never asked to rank. Unanimity is the signal. Record "cold-viewer check:
+   synthetic panel only, human check not done", launch only as a screen (ad-test-loop), and run the human check
+   before scaling.
 7. **Publication gate** (`references/publication-gate.md`) on the **final exported files**: claims, rights, synthetic
    media, platform classification, expiry, and an independent review where reviewers are available. Write the triage.
 8. **Launch package** (`templates/launch-package.md`): per creative the two files, primary text (as many sentences as

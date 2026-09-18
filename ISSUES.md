@@ -181,3 +181,56 @@ creative concept before any claim about longevity, and reporting the span of the
 labelling that span a **floor** unless the results were paged through, because these endpoints return
 newest first with no duration sort, so one page of a thousand-match query always looks like nothing older
 is running.
+
+## Round 5: round 4's own fix was wrong, 2026-09-18
+
+| ID | Issue | Resolution | Verified by |
+|---|---|---|---|
+| P1 | **The grouping rule shipped in round 4 named the wrong key, so following it produces the opposite of the truth.** `ad-libraries.md` said "group the results by page and by creative title". `ad_creative_link_title` is the **landing page's own `<title>` tag**, so every ad pointing at one landing page carries the same string no matter what the creative says. Grouping on it collapses a varied campaign into a single row. Measured on one advertiser on 18 Sep 2026, both ways on the same day: the link title gave **1 concept**, the ad body gave **20**. A reader who followed round 4's rule would conclude a competitor running 20 long-form essays was running one ad 138 times, which is what happened here | `ad-libraries.md` now says group on the body text and never on the link title, and carries the 1-against-20 measurement. Route 1 is rewritten: the public UI is the primary instrument, not the accessible fallback, because it returns full ad body text and will sort by **"Impressions: high to low"**, which no API route can do. Route 2 now lists what the MCP cannot return. Step 2b in `newsjack-ads/SKILL.md` and all three `templates/ADS.md` copies updated to match | `verify-package.sh`, plus reading the same advertiser through both instruments |
+| P2 | **The example that justified round 4's rule was itself produced by round 4's error.** The claim "one page was running 25 near-identical ads of the same product" came from counting identical link titles. Read in the UI, those turned out to be several completely different essays | The 25-ad claim is withdrawn in `ad-libraries.md` and in `SKILL.md`, with a note saying why. The seven-copies-in-six-seconds measurement survives: it came from `ad_creation_time` deltas, which the key does not affect | Re-reading the same page in the UI |
+
+**The lesson, and it is sharper than round 4's.** Round 4 was written from an API alone, and the API's field
+names quietly decided the analysis. The rule it produced was confidently worded, was published, and was wrong in
+the one direction that matters: it told you a churning competitor was a static one. What fixed it was not more
+API calls or another reviewer. It was opening the page in a browser and reading what the ads actually said.
+
+**What the review gate did and did not do, corrected after reading it.** The first draft of this entry claimed a
+two-vendor gate "cannot catch this class of defect". That was wrong, and the gate's own output refutes it. Grok,
+working from the documents alone with no library access, flagged the claim as **unsupported by the instrument it
+cited**: same link title on the newest 50 of an estimated 138 is not one concept, and "no shape variance" is a
+statement about creatives nobody had looked at. It could not know the true count was 20. It could and did know the
+stated count was not established.
+
+So the honest division is narrower and more useful: **a reading gate catches the overclaim; only execution
+establishes the fact.** Grok told us the number was not supported. Opening the UI told us the number was 20. Both
+were needed, and the cheap one came second, which is the wrong order.
+
+## Round 6: no cold reader when there is no human, 2026-09-18
+
+| ID | Issue | Resolution | Verified by |
+|---|---|---|---|
+| P1 | **The cold-viewer check required a person, and the package's only answer when there was none was "record it as not done and do not scale."** Round 1 had already logged this (`R (N7), G`: a same-day solo run cannot satisfy the check). So the one gate the package calls "not replaceable by reviewers" was routinely skipped by exactly the operator the package is written for: one person, on a deadline, with nobody outside the project to show a file to | New `references/synthetic-panel.md`, shipped identically in all three skills because all three ship the publication gate that now points at it. Isolated persona agents, shown the **final exported file**, asked what is sold and what confuses them, never asked to rank. Branch added to `video-ads` SKILL step 6 and to `templates/launch-package.md`; §7 of the shared publication gate now describes the fallback and its limit | `verify-package.sh`, now extended to check the new shared file is identical wherever it is shipped |
+
+**The substance, and it is a restriction rather than a capability.** The tempting use of a persona panel is to
+rank creatives, and that is the use the measurement does not support. Four personas over five live creatives:
+on the only fair comparison available, three creatives inside one ad set, **one of four** produced the true
+order, and four personas written from one brief produced four different orders with nothing in their output
+indicating which to believe. On defects the same four agreed: 4 of 4 that they could not tell what was being
+sold within three seconds, which a separate final-cut review had reached independently; 4 of 4 on a near-empty
+frame at second three, confirmed with ffprobe; 3 of 4 that one creative read as an ad for a mobile strategy
+game, confirmed by opening the stimulus and finding a game label over cinematic key art in its own first frame.
+Three cold readers caught a category error that nobody who had watched the finished video had noticed.
+
+So the rule the file ships is **use a cold reader to find defects, use the market to rank, and do not swap them
+round.** A panel unblocks a screen-level launch. It does not gate scaling and it does not pick a winner.
+
+⚠️ **What that run cannot support.** At n = 5, by exhaustive permutation over all 120 orderings, the only rank
+correlation reaching p < 0.05 is a perfect +1.00. So it is not evidence that panels cannot rank, and the file
+says so. It is evidence that on a ranking question that panel gave no way to choose between four contradictory
+answers, while on a defect question it was near unanimous and checkable.
+
+**Two failure modes are documented because both were paid for.** A persona written from a known buyer's stated
+problem and then asked whether the ads address that problem answers what the prompt already determined, so it
+can never be a second instrument agreeing with the sales data. And a panel shown stills but scored against a
+metric that motion produces measures the stimulus, not the ads: every persona in that run objected to this
+unprompted, which is why the file requires the final exported file.

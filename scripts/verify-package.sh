@@ -35,7 +35,7 @@ for d in skills/*/; do
 done
 
 # 4. Shared files are identical copies (project context template, publication gate)
-for f in templates/ADS.md references/publication-gate.md; do
+for f in templates/ADS.md references/publication-gate.md references/synthetic-panel.md; do
   C=$(for s in skills/*/; do [ -e "$s/$f" ] && shasum -a 256 "$s/$f" | cut -d' ' -f1; done | sort -u | wc -l | tr -d ' ')
   [ "$C" = 1 ] && ok "$f identical wherever it is shipped" || bad "$f differs between skills"
 done

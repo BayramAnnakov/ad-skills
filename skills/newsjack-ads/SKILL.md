@@ -68,19 +68,28 @@ as headline only, which audience outlets carried it.
 A separate source from the news, and the only free one that shows what somebody else is paying to keep
 running. Read `references/ad-libraries.md` first; the routes and their costs come from `ADS.md`.
 
-Cheapest route that answers the question: the public Meta Ad Library needs no account at all, the Meta Ads
-MCP's library search is free if your agent has it, and the paid transparency endpoints are for the libraries
-Meta does not cover. A paid call needs a stated price and a yes for that run, like any other.
+Cheapest route that answers the question, and for Meta that is the public Ad Library UI, not an API: it shows
+full ad body text and sorts by impressions, which no API route does. Google, LinkedIn and TikTok have their own
+free public libraries too. The Meta Ads MCP's library search is free if your agent has it, but it returns no body
+text and no impressions sort. Paid transparency endpoints only automate what the free pages already show; a paid
+call needs a stated price and a yes for that run, like any other.
 
-**Group by page and by creative concept before you say anything about longevity**, then report
-`pages · distinct concepts · longest span in days for one concept`. The heuristic that a competitor's
-longest-running creative is its winner only holds for advertisers who keep single ads running; measured in
-one category, one page ran 25 near-identical ads of the same product and another spawned seven copies of one
-ad within six seconds. Age is a property of the ad object, not of the concept.
+**Group by the ad's body text before you say anything about longevity**, then report
+`pages · distinct concepts · longest span in days for one concept`. Never group by the creative's link title:
+that is the landing page's own `<title>`, identical across every ad pointing at it. Measured on one advertiser
+on 18 Sep 2026, the link title gave **1** concept and the body text gave **20**.
 
-**Label the span a floor unless you paged through the results.** These endpoints return newest first with no
-duration sort, so one page of results from a query with thousands of matches always looks like nothing older
-is running.
+The heuristic that a competitor's longest-running creative is its winner only holds for advertisers who keep
+single ads running; one page was measured spawning seven copies of one ad within six seconds. Age is a property
+of the ad object, not of the concept.
+
+**Use the UI's impressions sort, and prefer it to the API.** `facebook.com/ads/library` will rank an
+advertiser's live ads by delivery bought (Sort by -> "Impressions: high to low") and show the body text and the
+start date of each. No API route does either. When the oldest concept is also the most duplicated and first in
+that ordering, three independent signals agree and you have found their winner.
+
+**If you only used an API, label the span a floor.** Those endpoints return newest first with no duration sort,
+so one page of results from a query with thousands of matches always looks like nothing older is running.
 
 Two outputs feed the rest of the run: the shapes that survive in this category, which go to step 3, and any
 mechanism a live competitor ad already owns, which is taken. Borrow the shape, never the execution.
