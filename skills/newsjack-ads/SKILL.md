@@ -16,7 +16,9 @@ description: |
 
 Find what the audience talked about this week, match one story to something literally true about the product, and
 write a short ad whose headline carries the joke without naming the news. The ad must still tell a stranger what is
-sold and why it matters to them. Deliver within 24-48 hours of the spike, with a stop date.
+sold and why it matters to them. Ship as soon as the gates allow, with a stop date. **Do not promise 24 to 48
+hours**: production, the publication gate, independent review and a cold view take days, and a story picked because
+it dies in five days will lose that race. That is why the test pick is the longest-lived idea, not the freshest.
 
 Read `references/worked-example.md` once (a real run, including what went wrong) and
 `references/lessons.md`. Before any competitor scan, read `references/ad-libraries.md`.
@@ -68,28 +70,34 @@ as headline only, which audience outlets carried it.
 A separate source from the news, and the only free one that shows what somebody else is paying to keep
 running. Read `references/ad-libraries.md` first; the routes and their costs come from `ADS.md`.
 
-Cheapest route that answers the question, and for Meta that is the public Ad Library UI, not an API: it shows
-full ad body text and sorts by impressions, which no API route does. Google, LinkedIn and TikTok have their own
-free public libraries too. The Meta Ads MCP's library search is free if your agent has it, but it returns no body
-text and no impressions sort. Paid transparency endpoints only automate what the free pages already show; a paid
-call needs a stated price and a yes for that run, like any other.
+Cheapest route that answers the question. For Meta, start in the public Ad Library UI: it carries the body text,
+the start dates and a **Sort by** control offering "Impressions: high to low", which is the fastest way to see
+what an advertiser funds hardest. The official Ad Library API returns body text for all ads and is the route to
+script a repeatable scan; an MCP wrapper is convenient but usually exposes less, so say which you used. Google
+and LinkedIn have their own free libraries; TikTok's, X's and Snap's are EU-facing only, so outside the EU the
+honest line is "no transparency library available", not an empty result. A paid endpoint needs a stated price and
+a yes for that run, like any other.
 
-**Group by the ad's body text before you say anything about longevity**, then report
-`pages · distinct concepts · longest span in days for one concept`. Never group by the creative's link title:
-that is the landing page's own `<title>`, identical across every ad pointing at it. Measured on one advertiser
-on 18 Sep 2026, the link title gave **1** concept and the body text gave **20**.
+**Group on the ad body text before you say anything about longevity**, then report
+`pages · distinct concepts · longest span in days for one concept`. Do not make the headline
+(`ad_creative_link_titles`) your primary key: many advertisers reuse one headline across every ad pointing at a
+landing page, and grouping on it collapses a varied campaign into one row. Measured on one advertiser on
+18 Sep 2026, the headline gave **1** apparent concept and the body gave **20**.
 
 The heuristic that a competitor's longest-running creative is its winner only holds for advertisers who keep
 single ads running; one page was measured spawning seven copies of one ad within six seconds. Age is a property
 of the ad object, not of the concept.
 
-**Use the UI's impressions sort, and prefer it to the API.** `facebook.com/ads/library` will rank an
-advertiser's live ads by delivery bought (Sort by -> "Impressions: high to low") and show the body text and the
-start date of each. No API route does either. When the oldest concept is also the most duplicated and first in
-that ordering, three independent signals agree and you have found their winner.
+**Say "funded longest and hardest", not "winner".** When the oldest concept is also the most duplicated and top
+of the impressions sort, that is not three independent confirmations: age buys delivery and advertisers add
+copies to what they keep funding, so it is closer to one fact seen three ways. It is still the best free signal
+available, and it is still not evidence of profit.
 
-**If you only used an API, label the span a floor.** Those endpoints return newest first with no duration sort,
-so one page of results from a query with thousands of matches always looks like nothing older is running.
+**If your route returned newest-first with no duration sort, label the span a floor**, because one page of a
+thousand-match query always looks like nothing older is running.
+
+Record the scan as a table in the report (`templates/report.md`): page, concept, objects carrying it, earliest
+delivery start, span, one snapshot URL, and which route you used.
 
 Two outputs feed the rest of the run: the shapes that survive in this category, which go to step 3, and any
 mechanism a live competitor ad already owns, which is taken. Borrow the shape, never the execution.

@@ -22,8 +22,9 @@ one matched pair per question in a split test.
 
 - Expected events per arm = budget per arm / conservative cost per event. `scripts/arms.mjs plan` turns that into the
   chance of seeing a true difference and the smallest difference the budget can detect.
-- Worked numbers (alpha 0.05): 5 expected events per arm detects a 2x difference 18% of the time and needs about a
-  3.9x difference for 80% power. 75 events per arm detects about 1.6x. Below ~10 events per arm, a test is a screen for
+- Worked numbers (alpha 0.05): 5 expected events per arm detects a 2x **increase** 18% of the time, the matching
+  **decrease** only 7%, and needs about a 3.9x difference for 80% power. Always say which direction a power figure
+  is for: a halving is harder to see than a doubling at the same expected count. 75 events per arm detects about 1.6x. Below ~10 events per arm, a test is a screen for
   gross failures, not a winner-picker.
 - The learning phase is a delivery state, not a statistical threshold. A short promotion can be commercially useful
   without exiting it, and exiting it proves nothing about a winner.

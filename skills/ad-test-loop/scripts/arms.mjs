@@ -42,7 +42,12 @@ export function compare(xa, ea, xb, eb) {
   const [lo, hi] = n === 0 ? [0, 1] : cp(xa, n)
   const toRatio = (pi) => (pi >= 1 ? Infinity : (pi / (1 - pi)) * (eb / ea))
   const ci = [toRatio(lo), toRatio(hi)]
-  const verdict = Math.min(xa, xb) < 10 ? 'screen only' : ci[0] > 1 || ci[1] < 1 ? 'clear difference' : 'inconclusive'
+  const decisive = ci[0] > 1 || ci[1] < 1
+  const verdict = Math.min(xa, xb) >= 10
+    ? (decisive ? 'clear difference' : 'inconclusive')
+    : decisive
+      ? 'gross failure shown'   // too few events to crown a winner, but the interval excludes parity
+      : 'screen only'
   return { p, ratio, ci, verdict }
 }
 const poisPmf = (k, l) => Math.exp(-l + k * Math.log(l) - logFact(k))
@@ -67,6 +72,9 @@ export function power(lambdaB, ratio, alpha = 0.05) {
   }
   return pow
 }
+// NOTE: this is the power of the significance test alone. `compare` additionally withholds a
+// "clear difference" verdict until BOTH arms have 10 events, so at small expected counts the chance of getting
+// that verdict is well below the number printed here. Expected events per arm is the figure to plan against.
 export function plan(budget, cost, ratio = 2) {
   const events = budget / cost
   const pw = power(events, ratio)

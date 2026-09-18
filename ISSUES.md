@@ -176,7 +176,8 @@ published artifact.
 **The substance of the fix, not just its location.** The heuristic people arrive with is "a competitor's
 longest-running creative is its winner". It only holds for advertisers who keep single ads running.
 Measured in one category: one page was running 25 near-identical ads of the same product, another had
-spawned seven copies of one ad within six seconds. So the skill now requires grouping by page and by
+spawned seven copies of one ad within six seconds. ⚠️ **The 25-ad half of that sentence was withdrawn in round 5
+below**: it was an artifact of the grouping key this round got wrong. The seven copies stand. So the skill now requires grouping by page and by
 creative concept before any claim about longevity, and reporting the span of the group. It also requires
 labelling that span a **floor** unless the results were paged through, because these endpoints return
 newest first with no duration sort, so one page of a thousand-match query always looks like nothing older
@@ -187,7 +188,7 @@ is running.
 | ID | Issue | Resolution | Verified by |
 |---|---|---|---|
 | P1 | **The grouping rule shipped in round 4 named the wrong key, so following it produces the opposite of the truth.** `ad-libraries.md` said "group the results by page and by creative title". `ad_creative_link_title` is the **landing page's own `<title>` tag**, so every ad pointing at one landing page carries the same string no matter what the creative says. Grouping on it collapses a varied campaign into a single row. Measured on one advertiser on 18 Sep 2026, both ways on the same day: the link title gave **1 concept**, the ad body gave **20**. A reader who followed round 4's rule would conclude a competitor running 20 long-form essays was running one ad 138 times, which is what happened here | `ad-libraries.md` now says group on the body text and never on the link title, and carries the 1-against-20 measurement. Route 1 is rewritten: the public UI is the primary instrument, not the accessible fallback, because it returns full ad body text and will sort by **"Impressions: high to low"**, which no API route can do. Route 2 now lists what the MCP cannot return. Step 2b in `newsjack-ads/SKILL.md` and all three `templates/ADS.md` copies updated to match | `verify-package.sh`, plus reading the same advertiser through both instruments |
-| P2 | **The example that justified round 4's rule was itself produced by round 4's error.** The claim "one page was running 25 near-identical ads of the same product" came from counting identical link titles. Read in the UI, those turned out to be several completely different essays | The 25-ad claim is withdrawn in `ad-libraries.md` and in `SKILL.md`, with a note saying why. The seven-copies-in-six-seconds measurement survives: it came from `ad_creation_time` deltas, which the key does not affect | Re-reading the same page in the UI |
+| P2 | **The example that justified round 4's rule was itself produced by round 4's error.** The claim "one page was running 25 near-identical ads of the same product" came from counting identical link titles. Read in the UI, those turned out to be several completely different essays | The 25-ad claim is removed from `SKILL.md` and withdrawn in `ad-libraries.md`, where the note explaining why belongs. The seven-copies-in-six-seconds measurement survives: it came from `ad_creation_time` deltas, which the grouping key does not affect | Re-reading the same page in the UI, and a grep confirming the claim is gone from both files |
 
 **The lesson, and it is sharper than round 4's.** Round 4 was written from an API alone, and the API's field
 names quietly decided the analysis. The rule it produced was confidently worded, was published, and was wrong in
@@ -234,3 +235,55 @@ problem and then asked whether the ads address that problem answers what the pro
 can never be a second instrument agreeing with the sales data. And a panel shown stills but scored against a
 metric that motion produces measures the stimulus, not the ads: every persona in that run objected to this
 unprompted, which is why the file requires the final exported file.
+
+## Round 7: a third reviewer read the whole package, 2026-09-18
+
+Fable 5.1, briefed adversarially on the published tree, no subagents. It returned 14 defect groups. Every claim
+of its that I could check independently was correct, including two that contradicted things I had written hours
+earlier, so the unverifiable ones were given the benefit of the doubt rather than dismissed.
+
+### Verified against a primary source, and all three were wrong in the package
+
+| ID | Issue | Resolution |
+|---|---|---|
+| F1 | **The field definition was invented.** Rounds 5 and 6 asserted that `ad_creative_link_title` "is the landing page's own `<title>` tag". Meta's field reference defines `ad_creative_link_titles` as "a list of titles which appear in the call to action section for each unique ad card of the ad", which is the **advertiser's headline**. One advertiser's habit of reusing one headline was generalised into a field definition. **This is the same error as the round it was fixing, one layer down** | `ad-libraries.md` rewritten: the headline is the advertiser's, many advertisers reuse or default it so it under-splits, group on the body, and the headline is a fine *secondary* key for an advertiser who writes one per ad. Both earlier wrong versions are named in the file |
+| F2 | **"No API route can return body text or sort by impressions" was false.** Per the same reference, `ad_creative_bodies` is available **for all ads**, not only EU or political ones. The package never listed the official Ad Library API as a route at all: its "route 2" was one MCP wrapper, and that wrapper's limits were presented as the API's | The official `/ads_archive` API is now route 2, with what it returns. The MCP wrapper is route 3, with its limits named as the wrapper's, not the library's |
+| F3 | **`ad-libraries.md` contradicted itself on performance data**, saying both that a commercial ad yields "no performance data at all" and that the impressions sort is a performance signal | Both corrected. `impressions` and `spend` are political and issue ads only; `eu_total_reach` exists for EU-delivered ads; the UI sort gives an ordering and never the numbers, and Meta does not document whether it ranks lifetime or recent delivery |
+
+### Reasoning defects, accepted on the argument
+
+| ID | Issue | Resolution |
+|---|---|---|
+| F4 | **"Three independent signals agree and you have found their winner" is not supported.** Oldest, most duplicated and top of the impressions sort are mechanically coupled: age buys delivery, and advertisers add copies to what they keep funding. It is closer to one fact seen three ways. "Winner" also contradicted the file's own caveat that a running ad is not evidence of profit | Now "funded longest and hardest", with the coupling stated. Also fixed the non sequitur that an advertiser who duplicates "has no long-running creative to find": duplicates usually mean one creative pushed into many ad sets, and the file's own example has the most-duplicated concept running longest |
+| F5 | **The synthetic panel prescribed a method that cannot be run, and cited chance as evidence.** It required "the final exported file, not a still" as the stimulus, which no agent can watch, with no procedure given, while every row of its own evidence table came from stills. And "one of four personas produced the true order" was on three creatives: chance of at least one hit is **52%**, expected hits **0.67**. The result is the modal outcome of the null | Rewritten. A concrete stimulus procedure (`ffmpeg -vf fps=2`, frames handed over with timestamps and a statement that they are frames, not playback), the chance arithmetic printed, the ranking claim narrowed to "a ranking question returns numbers that look like findings and are not", the evidence table marked where a row rests on the panel alone, and the "unanimity" wording reconciled with the "three or more" rule it contradicted |
+| F8 | **`arms.mjs plan` promised power that `compare` refused to deliver.** `compare A=40/500 B=8/500` returns ratio 5.00, interval 2.31..12.37, p < 0.001 and a verdict of "screen only", because the 10-event floor fires on the losing arm. The floor is right; hiding the one thing a small test can establish is not | New verdict `gross failure shown` for below-floor comparisons whose interval excludes parity. `plan` now says in the source that its figure is the power of the significance test alone and that `compare` withholds "clear difference" below the floor. The test that asserted the old string is rewritten to assert the sharper behaviour and to keep asserting the thing that must never happen ("clear difference"). 9 tests pass |
+
+### Safety, where an agent could pass a gate by itself
+
+| ID | Issue | Resolution |
+|---|---|---|
+| F6a | The spine approval marker is the gate, and nothing forbade the agent typing it | "The agent never writes that string, under any circumstance, including when working alone or when the user says to go ahead in chat." Absent marker means stop and ask |
+| F6b | "Nothing is created before the yes" is unachievable through an API, where building *is* creating, and no guidance said to create paused. So the literal gate either blocked the procedure or got ignored | Split: nothing **delivers an impression** without the yes; through an API every object is created `status: PAUSED` and an unpaused create is a launch whatever it was called. Pausing and stopping never need a yes, so an expired claim can be stopped immediately |
+| F6c | "Human check before scaling" had no enforcement point | A cold-viewer line reading "synthetic panel only" now explicitly clears a screen and blocks a scale, and "scale" requires a human check on file plus a verdict better than "screen only" |
+| F6e | `meta-ads-manager.md` said to **delete** the old ad set after duplicating it | Pause it. Deleting loses the delivery history you need to read results, and the duplicated ads re-enter review with no accumulated engagement |
+
+### Consistency and correctness
+
+| ID | Issue | Resolution |
+|---|---|---|
+| F7 | **"Each skill works when installed alone" was false, and `verify-package.sh` printed PACKAGE OK over it.** Two bugs: the reference check only matched paths beginning `references/`, `templates/`, `template/` or `scripts/`, so a bare filename in prose was never checked, which is how the shared publication gate came to point at `story-and-attention.md` that ships only in video-ads; and the shared-file identity check used `[ -e ] &&`, so a missing copy contributed nothing and one surviving copy passed as "identical" | Both fixed. The identity check now counts copies and names the skills a shared file is missing from. The reference check now also resolves bare `*.md` filenames, skipping the user's own project files and template placeholders. **Turning it on immediately caught two fresh instances that I had written minutes earlier**: cross-skill paths inside `ADS.md` and `synthetic-panel.md`, both of which ship in every skill. Negative-tested by removing a shared copy and confirming it fails |
+| F9 | `meta-ads-manager.md` told a first campaign to "optimize for the highest-funnel event that will", which read literally is the junk end of the funnel, and recommended Advantage+ placements 12 lines after warning that Advantage+ can pour a small budget into Audience Network at 15-30% CTR | "The event **closest to purchase** that will", with an explicit warning off landing-page views. Placements now say Advantage+ **with Audience Network excluded**, or a required day-1 placement breakdown |
+| F11 | `measurement.md` asserted a cause (in-app browsers) for an analytics gap measured on two single days, with consent banners, blockers, bounced taps, link-click counting, processing lag and crawler traffic never excluded, while naming processing lag itself two lines later | Reframed: the gap is observed, the cause is not isolated, and the candidates are listed with an instruction not to attribute without testing that one |
+| F12 | `newsjack-ads` promised delivery "within 24-48 hours of the spike", which its own gates (production, publication gate, independent review, cold view) make unreachable. Step 2b also produced a table the report template had no section for | The promise is replaced by "as soon as the gates allow", with the reason, tying it to why the test pick is the longest-lived idea. `templates/report.md` gains a section 2b with the table, the three numbers, and the route used |
+| F8b | `test-design.md` quoted a power figure without its direction: 5 events per arm detects a 2x increase 18% of the time, but the matching decrease only 7% | States both, with the rule that a power figure always names its direction |
+| F12b | The shared `ADS.md` was pre-filled with the package's own route claims, contradicting its own "leave a field empty rather than guessing" instruction and guaranteeing those claims go stale inside the user's file | The field now asks only for the user's route, key location and price, and points at the skill for the routes themselves |
+
+### Not taken, or not yet
+
+- **Sound (F10).** Fable argues that "most placements start muted" is wrong for Reels, citing secondary sources that most Reels are watched with sound on. The design rule ("works with the sound off") is right either way, and the campaign this package came from shipped silent video that reached 28-61% hook rates, so nothing here is known to have cost anything. It needs its own check against Meta's current placement guidance before the template's default changes. Left as it is, deliberately.
+- **Automated Rules (F9c).** The claim that "Meta cannot stop one ad on a date" is probably too strong, since Automated Rules can act on a schedule. Marked INFERRED by the reviewer and not verified by me, so unchanged pending a check in the account.
+- **The pre-publish checklist in README (F14).** Still published, unchecked, and includes items ISSUES says were done. It is the owner's list and the licence question is the owner's to close, so flagged rather than edited.
+- **Node 18 TAP output (F14b).** The verifier counts lines beginning with a check mark, which may report "(0 passed)" as ok on the stated minimum Node version. Unverified here (only Node 24 available) and worth a real check.
+- Several TASTE items, including the em-dash lint, which the owner has already rejected once.
+
+**The pattern worth keeping.** Three of the four worst findings were mine from the same day, and two of those were introduced *by* a correction. A reading gate caught the overclaims; a primary source settled the facts; turning on a stricter verifier caught the instances that were too fresh for either. The order that works is: change it, then let a machine check it, then let a stranger read it.

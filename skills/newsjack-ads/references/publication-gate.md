@@ -53,8 +53,8 @@ whether it is documentary, illustrative or reconstructed.
 ## 6. Independent review
 
 - Use reviewers from different model vendors where available (the project's `ADS.md` names them and how to run them).
-  Give each the final files, the brief, and acceptance criteria (the rules in this file and in
-  story-and-attention.md), not the reasoning that produced the ad. Ask what is wrong, missing, unsupported or
+  Give each the final files, the brief, and acceptance criteria (the rules in this file, plus the story rules
+  the video-ads skill carries), not the reasoning that produced the ad. Ask what is wrong, missing, unsupported or
   misleading for a viewer who was not in the project.
 - Run reviewers with the narrowest access that works: a copy of the files in a scratch folder, read-only mode where
   the tool has one, no credentials in reach. A brief that says "only this folder" is not isolation: a reviewer with
@@ -72,9 +72,9 @@ Neither a model reviewer nor the author can tell whether a stranger gets the jok
 at phone size to at least one person from outside the project, with no explanation, and record what they understood
 after 1 s, 3 s and at the end.
 
-**If no human is available**, a panel of isolated persona agents shown the final file is a partial stand-in: it
-unblocks a screen-level launch and never replaces the human check before scaling. Ask it what is being sold, what is
-promised and what category the ad seems to belong to. **Never ask it to rank or to score.** Measured on four
-personas over five live creatives: one of four produced the true order on the only fair comparison, while all four
-agreed on what was broken and three of those agreements were independently confirmable. The method and its two
-failure modes are in the video-ads skill, `references/synthetic-panel.md`.
+**If no human is available**, a panel of isolated persona agents is a partial stand-in: it unblocks a
+screen-level launch and never replaces the human check before scaling. Hand them an ordered frame sequence, not an
+mp4, and ask what is being sold, what is promised and what category the ad seems to belong to. **Never ask them to
+rank or to score:** in the one run behind this, the ranking result was exactly what guessing produces, while the
+defect findings had high agreement and mostly checked out against other instruments. The method, the arithmetic and
+two failure modes are in `references/synthetic-panel.md`, which ships beside this file in every skill.

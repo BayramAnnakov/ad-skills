@@ -31,13 +31,29 @@ for d in skills/*/; do
   while IFS= read -r ref; do
     [ -e "$d/$ref" ] || [ -e "$d/template/$ref" ] || { bad "$n: missing $ref"; miss=1; }
   done < <(grep -rohE '`?(references|templates|template|scripts)/[A-Za-z0-9_./-]+' "$d/SKILL.md" "$d/references" "$d/templates" 2>/dev/null | tr -d '`' | sed -E 's/[.,:)]+$//' | grep -v '<' | sort -u)
+  # Bare filenames in prose (`story-and-attention.md`) escaped the pattern above, which is how a shared file
+  # came to point at a reference that ships in only one skill while this check stayed green.
+  while IFS= read -r ref; do
+    case "$ref" in ADS.md|SOURCES.md|CLAUDE.md|README.md|ISSUES.md) continue;; esac
+    [ -n "$(find "$d" -name "$ref" -not -path '*/node_modules/*' -print -quit 2>/dev/null)" ] \
+      || { bad "$n: missing $ref (referenced by bare filename)"; miss=1; }
+  done < <(grep -rohE '(^|[^/A-Za-z0-9_->-])[A-Za-z0-9_-]+\.md' "$d/SKILL.md" "$d/references" "$d/templates" 2>/dev/null \
+             | grep -v '<' | grep -oE '[A-Za-z0-9_][A-Za-z0-9_-]*\.md' | sort -u)
   [ $miss = 0 ] && ok "$n: every referenced file exists inside the skill"
 done
 
 # 4. Shared files are identical copies (project context template, publication gate)
 for f in templates/ADS.md references/publication-gate.md references/synthetic-panel.md; do
+  N=0; MISSING=""
+  for s in skills/*/; do
+    if [ -e "$s/$f" ]; then N=$((N+1)); else MISSING="$MISSING $(basename "$s")"; fi
+  done
+  TOTAL=$(ls -d skills/*/ | wc -l | tr -d ' ')
   C=$(for s in skills/*/; do [ -e "$s/$f" ] && shasum -a 256 "$s/$f" | cut -d' ' -f1; done | sort -u | wc -l | tr -d ' ')
-  [ "$C" = 1 ] && ok "$f identical wherever it is shipped" || bad "$f differs between skills"
+  if [ "$N" != "$TOTAL" ]; then
+    bad "$f missing from:$MISSING (a shared file must ship in every skill, or the skill does not work alone)"
+  elif [ "$C" = 1 ]; then ok "$f identical in all $TOTAL skills"
+  else bad "$f differs between skills"; fi
 done
 
 # 5. Unit tests (no network, no credits). Work files go to out/verify (or $VERIFY_DIR), not /tmp.

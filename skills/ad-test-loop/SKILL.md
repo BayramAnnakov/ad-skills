@@ -20,11 +20,18 @@ record, the house rules.
 
 ## Hard gates
 
-- **Nothing is created, edited, published, paused or activated without the user's explicit yes on the final setup**
-  (every ad set and ad, destination, budget, schedule, audience). A launch package from video-ads is an input, not a
+- **Nothing delivers an impression without the user's explicit yes on the final setup** (every ad set and ad,
+  destination, budget, schedule, audience). Through a UI that means drafts. **Through an API or MCP, building is
+  creating, so every object is created with `status: PAUSED` and stays paused until that yes**; an unpaused create
+  is a launch, whatever it was called. Activation, budget increases and edits to a live ad each need their own yes.
+  Pausing and stopping never do: if a claim expires, a stop date passes or a loss limit is hit, pause first and
+  report it. A launch package from video-ads is an input, not a
   permission. The platform's "publish" button may publish every draft in the account: read the list first.
 - **The launch package has a completed publication checklist** (`references/publication-gate.md`): claims,
   rights, synthetic media, special-category classification, stop dates, cold-viewer check. Missing items block launch.
+  A cold-viewer line reading "synthetic panel only, human check not done" clears a **screen** and blocks a
+  **scale**: raising budget on a creative no human outside the project has ever watched is not a decision the
+  package supports.
 - **Never exclude a country, city or audience on site-traffic data alone.** Short sessions from a place say nothing
   about the buyers who live there; a country with past purchases stays until ad-level results say otherwise.
 - **No verdict without a denominator.** Every claim about a winner states events, exposure and the arms.mjs verdict.
@@ -70,11 +77,14 @@ day 0. Record every tracking change with its timestamp: numbers before and after
 - Per arm and per creative: spend, impressions, link clicks, landing sessions (suspected automation separated),
   engaged sessions, qualified actions from the backend, payments. Reconcile platform conversions with backend rows.
 - For a randomized split or one matched pair: `node scripts/arms.mjs compare A=<events>/<spend> B=<events>/<spend>`,
-  and report its verdict; "inconclusive" and "screen only" are results. Ads pooled in one ad set, or arms whose tracking
+  and report its verdict. "inconclusive", "screen only" and "gross failure shown" are all results: the last means
+  too few events to crown a winner but an interval that excludes parity, so the losing arm is established as bad. Ads pooled in one ad set, or arms whose tracking
   changed mid-test, get counts and no verdict: the helper cannot repair unequal delivery.
 - Apply the loss limit: a creative that spent its limit with zero qualified actions stops, whatever its CTR.
 - End with one decision per creative: revise the opening, clarify the offer, fix the landing page, keep collecting,
-  stop, or scale. Write the observation separately from the explanation you propose.
+  stop, or scale. Write the observation separately from the explanation you propose. **"Scale" additionally requires
+  a human cold-viewer check on file** and a verdict better than "screen only"; without both, the honest decision is
+  "keep collecting".
 
 ## 5. Write back
 

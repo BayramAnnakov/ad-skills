@@ -53,8 +53,10 @@ and the failures behind them are in `references/`.
      it does not introduce;
    - every line that carries meaning is full size; a pivot line gets its own beat;
    - it works with the sound off; motion that points at the line being read helps, unrelated motion competes with it.
-   Approval = the decision owner writes `APPROVED <date>` in the spine file. Working alone: wait a night or show one
-   person, then mark it. One approval round on the spine replaces several rounds of re-renders.
+   Approval = the decision owner writes `APPROVED <date>` in the spine file. **The agent never writes that string,
+   under any circumstance, including when working alone or when the user says to go ahead in chat: the whole point
+   of the marker is that a human typed it.** If it is absent, stop and ask. Working alone, the decision owner should
+   wait a night or show one person before marking it. One approval round on the spine replaces several re-renders.
 3. **Assets, cheapest that carries the beat** (`references/generation.md`): the product's own material (screens,
    photos, footage, a photographed drawing) > a JSX mock of the product (`MockCard`) or a phone photo > a generated
    text-free illustration > generated footage where motion matters. When the user must choose between assets or
@@ -73,7 +75,8 @@ and the failures behind them are in `references/`.
    Write down what they understood after 1 s, after 3 s, and at the end: the problem, why it matters to them, what is
    sold, what to do next. A gap is a defect to fix, not a note. If nobody outside the project is available, run a
    **synthetic panel** (`references/synthetic-panel.md`): isolated persona agents, shown the final file, asked what
-   is being sold and what confuses them, never asked to rank. Unanimity is the signal. Record "cold-viewer check:
+   is being sold and what confuses them, never asked to rank. Agreement across personas is the signal, and a lone
+   voice is noise. Record "cold-viewer check:
    synthetic panel only, human check not done", launch only as a screen (ad-test-loop), and run the human check
    before scaling.
 7. **Publication gate** (`references/publication-gate.md`) on the **final exported files**: claims, rights, synthetic

@@ -11,7 +11,8 @@
 - A custom conversion can only be built on an event the dataset has already received: deploy the event, trigger it
   once on production, wait until it shows, then create the conversion.
 - The optimization event of a published ad set could not be switched: duplicate the ad set, set the event on the copy,
-  delete the old one (the ads come along).
+  then **pause** the old one (the ads come along). Do not delete it: deleting loses the delivery history you will want
+  when reading results, and the duplicated ads re-enter review with no accumulated engagement.
 - Some countries require a minimum age (Thailand 20+). EU delivery needs the advertiser and payer fields filled.
 - Review every default before publishing: Advantage+ creative enhancements (touch-ups, text improvements), standard
   enhancements, "Reveal details over time". They change what the viewer sees.
@@ -30,10 +31,13 @@
   arrive in Events Manager, and the landing page loads fast on a phone in the in-app browser.
 - Objective Sales (or Leads if the conversion is a signup). One campaign, one ad set, 2-3 ads.
 - Optimization event: Meta's learning phase ends after about 50 optimization events in 7 days. If purchases will not
-  reach that at the budget, optimize for the highest-funnel event that will (lead, checkout start, a custom engaged-visit
-  event that requires real input), and judge by backend purchases. Record the choice and why in the test plan.
-- Audience: the countries and language that match the offer; otherwise broad. Placements: Advantage+ unless a format
-  needs exclusions. Turn the creative enhancements off (below).
+  reach that at the budget, optimize for the event **closest to purchase** that will (checkout start, lead, a custom
+  engaged-visit event that requires real input), and judge by backend purchases. Do not drop to a landing-page view to
+  hit the volume: that is the most junk-prone event on the list and the one crawlers and accidental taps inflate. Record the choice and why in the test plan.
+- Audience: the countries and language that match the offer; otherwise broad. Placements: Advantage+ **with Audience
+  Network excluded**, or Advantage+ plus a required placement breakdown on day 1. On a small budget Audience Network
+  can take most of the spend at a click-through rate that makes every downstream number meaningless (see above), and a
+  first campaign is exactly when you cannot yet tell that from the totals. Turn the creative enhancements off (below).
 - Budget: enough for a 3-5 day pilot whose first job is measuring cost per event, not picking a winner. Once it
   delivers and the numbers reconcile, that ad set is the proven setup to clone.
 

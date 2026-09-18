@@ -4,9 +4,13 @@
 
 - **The ad platform**: delivery and its own attributed conversions. Blind to what happens after the click that is not
   sent back, and it models some conversions.
-- **Web analytics** (sessions by `utm_content`, landing page): blind to in-app browsers that drop the page before
-  analytics loads (on one day, 30 link clicks on the best ad gave 15 sessions; on another, a session-recording tool saw
-  87 people from Meta where web analytics saw about 34), and it counts automation as visitors. For what visitors did
+- **Web analytics** (sessions by `utm_content`, landing page): undercounts ad traffic, and by a lot. Measured on two
+  single days: 30 link clicks on the best ad gave 15 sessions, and a session-recording tool saw 87 people from Meta
+  where web analytics saw about 34. **The gap is observed; the cause is not isolated.** Candidates, none excluded:
+  in-app browsers closing before the tag fires, consent banners and consent-mode defaults, ad blockers, accidental
+  taps that bounce before load, how the platform counts a link click, same-day processing lag (below), and crawler
+  traffic inflating the recording tool's side. Do not attribute it to one of these without testing that one.
+  Analytics also counts automation as visitors. For what visitors did
   on the page, use session recordings (tap and scroll maps, per-session events) and count people, not taps: 7 taps on a
   sign-up button came from 2 people.
   Engagement for the current day can read near zero until processed: judge complete days.

@@ -12,6 +12,20 @@ Buyer and the decision the ads speak to: <from ADS.md or the brief>.
 | Story | Date | Sources opened | Headline only | Audience outlets that carried it | Shape | Verdict and reason |
 |---|---|---|---|---|---|---|
 
+## 2b. Competitors' live ads
+
+Route used: <UI / official API / MCP wrapper / paid endpoint>. What that route can and cannot show is in
+`references/ad-libraries.md`; it determines what the span and the grouping below can mean.
+
+| Page | Concept (from the body text) | Objects | Earliest delivery start | Span | Snapshot |
+|---|---|---|---|---|---|
+|  |  |  |  |  |  |
+
+`pages · distinct concepts · longest span in days for one concept`: <n · n · n days>
+
+Does the category churn or hold? <one line>. Span is a floor if the route returned newest-first.
+Mechanisms a live competitor ad already owns, so we do not ship them: <list, or none>.
+
 ## 3. Ideas
 ### Idea N: <headline>
 - Buyer decision this ad speaks to, and the cost of getting it wrong:

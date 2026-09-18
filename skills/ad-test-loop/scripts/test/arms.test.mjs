@@ -32,8 +32,17 @@ test('impossible inputs are rejected instead of producing a verdict', () => {
   assert.throws(() => power(Infinity, 2), /expected events/)
   assert.throws(() => power(10, 1), /ratio/)
 })
-test('10 vs 0 events is a screen, never a winner', () => {
-  assert.equal(compare(10, 100, 0, 100).verdict, 'screen only')
+test('10 vs 0 events shows a gross failure, never a winner', () => {
+  // Below the 10-event floor no arm can be crowned, but an interval that excludes parity still establishes that
+  // the other arm failed. Those are different statements and the verdict now distinguishes them: what must never
+  // appear here is 'clear difference'.
+  const v = compare(10, 100, 0, 100).verdict
+  assert.notEqual(v, 'clear difference')
+  assert.equal(v, 'gross failure shown')
+})
+
+test('a thin comparison that excludes nothing is still only a screen', () => {
+  assert.equal(compare(6, 500, 4, 500).verdict, 'screen only')
 })
 test('a decrease is detected like the same comparison with the arms swapped', () => {
   // A at half of B's 30 expected events is the same experiment as A at twice B's 15.

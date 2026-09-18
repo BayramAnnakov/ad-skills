@@ -3,112 +3,105 @@
 The only free source that shows what somebody else is paying to keep running. Use it for two things: to find
 the shapes that survive in your category, and to avoid shipping a mechanism a competitor already owns.
 
-## Four routes, cheapest first
+## Routes
 
-**1. The public Meta Ad Library, `facebook.com/ads/library`. Start here, and usually finish here.** No account,
-no key, works in a browser. Open an advertiser's page in it and you get the **full body text of every live ad**,
-the creative image or video, the start date on each one, a country filter, a start-date filter, and the control
-that matters most:
+**1. The public Meta Ad Library, `facebook.com/ads/library`.** No account, no key, works in a browser. Open an
+advertiser's page and you get the body text of every live ad, the creative, the start date on each one, a country
+filter, a start-date filter, and a **Sort by** control offering "Impressions: high to low".
 
-> **Sort by -> "Impressions: high to low".**
+That sort is the most useful control in any of these routes, and it is the reason to start here. Note what it is
+and is not: Meta publishes impression and spend numbers only for political and issue ads, so for a commercial ad
+you see the **ordering** and never the numbers behind it. Meta does not document whether it ranks on lifetime or
+recent delivery, so treat it as "most funded, by Meta's own reckoning" and not as a performance metric.
 
-That ranks a competitor's live ads by how much delivery they actually bought. It is the closest thing to a
-performance signal that exists in public ad data, and **no API route can produce it.** Combine it with the start
-dates and you can read an advertiser's winner off the screen in a couple of minutes.
+**2. The official Meta Ad Library API** (`/ads_archive`, Graph API). Free, needs a Meta developer app and, for
+some categories, identity confirmation. Per the field reference it returns, **for all ads**,
+`ad_creative_bodies` ("the text which displays in each unique ad card"), `ad_creative_link_titles` and
+`ad_delivery_start_time`. `eu_total_reach` comes back for EU-delivered ads. `impressions` and `spend` are
+political and issue ads only. This is the route to script a repeatable scan.
 
-**2. Meta's Ad Library search, if your agent has the Meta Ads MCP.** Free, and it needs no scraping credits.
-Keyword plus country plus active status. Each result carries the advertiser's page name, the creative's link
-title, a creation time, a delivery start time, a snapshot URL, and an estimated total for the query. It is
-gated on the caller having at least one active ad account, not on the account being enabled for ad
-management, so it often works when the management tools refuse.
+**3. An MCP wrapper, if your agent has one.** Convenient, and free of scraping credits, but wrappers expose a
+subset. The Meta Ads MCP's library search returns page name, link title, creation and delivery-start times, a
+snapshot URL and an estimated total, and **no body text and no impressions sort**. Those are limits of that
+wrapper, not of the Ad Library. If a wrapper is all you have, say so in the report, because it changes what your
+grouping can mean (see below).
 
-**Know what it cannot give you before you build a conclusion on it.** No ad body text. No image or video. No
-impressions sort. No start-date filter. It is good for counting an advertiser's objects and for finding out who is
-in a category at all. It is **not** enough to characterise what anyone is running, and the next section is a worked
-example of getting that exactly wrong.
+**4. The other platforms' transparency products.** Free where they exist, and their coverage is narrower than
+people assume:
 
-**3. The other platforms' own transparency libraries, which are also free.** The **Google Ads Transparency
-Center**, the **LinkedIn Ad Library** and the **TikTok Creative Center** are public in a browser, no account
-needed, same as Meta's. Check these before paying anyone. A report that says "we could not see their Google ads"
-is almost always a report that nobody opened the free page.
+- **Google Ads Transparency Center**: public, searchable by advertiser, broad coverage.
+- **LinkedIn Ad Library**: public, searchable by advertiser.
+- **TikTok Commercial Content Library**: the actual transparency product, **EEA, Switzerland and UK only**. The
+  TikTok Creative Center is a different thing: an opt-in showcase of top-performing ads, not searchable by
+  advertiser, and not a transparency library.
+- **X and Snap** publish EU-facing repositories under the same regulation, so outside the EU expect nothing.
 
-**4. Paid ad-transparency endpoints, for automating what the free UIs show by hand.** What costs money is the
-wrapper, not the library. AnySite covers Facebook
-(`/facebook/ads`, `/facebook/ads/search`, `/facebook/advertisers`), Google (`/google/ads`,
-`/google/advertisers`), LinkedIn (`/linkedin/ad_library`), Snapchat (`/snapchat/ads`,
-`/snapchat/ads/search`), TikTok (`/tiktok/creative_center/ads`) and Twitter (`/twitter/ads`). Priced per
-request, so it falls under the same rule as any paid call: say the cost, get a yes for that run, and record
-the key location and the price in `ADS.md`. Apify publishes Ad Library actors that return a
-days-running field per ad and bill per thousand results; either is fine. Reach for these when the category
-you care about does not advertise on Meta.
+Outside the EU, for TikTok, X and Snap, the honest report line is **"no transparency library available for this
+platform in this market"**, not an empty result presented as an absence of advertising.
 
-## The rule that makes the heuristic work
+**5. Paid endpoints**, which automate what the free routes already show (AnySite, Apify and similar). Priced per
+request, so the usual rule applies: say the cost, get a yes for that run, and record the key location and the
+price in `ADS.md`.
 
-The common advice is that a competitor's longest-running creative is its winner, because the losers get
-switched off. That is true of an advertiser who keeps single ads running. Plenty do not.
+## The grouping rule
 
-Measured in one category in September 2026: one page had spawned seven copies of one ad **within six seconds of
-each other**. An advertiser who does that has no long-running creative to find, and the age of any one ad object
-tells you nothing about the concept behind it.
+The common advice is that a competitor's longest-running creative is its winner, because the losers get switched
+off. That is true of an advertiser who keeps single ads running. Plenty do not: one page was measured spawning
+seven copies of one ad **within six seconds of each other**.
 
-⚠️ **An earlier version of this file also claimed a page was "running 25 near-identical ads of the same course".
-That claim was withdrawn on 18 Sep: it was produced by grouping on the link title**, and when the same advertiser
-was read in the UI the 25 turned out to be several completely different long-form essays. The error that this
-section warns about is the error that generated its own example. Group on the body.
+**Group on the ad body text.** Then take the span and the object count of the group, not of a single ad object.
 
-**So group before you conclude. And group on the body text, never on the creative's link title.**
+**Why not the headline.** `ad_creative_link_titles` is the advertiser's own headline ("titles which appear in the
+call to action section for each unique ad card"). Many advertisers reuse one headline, or leave it to default,
+across every ad pointing at one landing page. When they do, grouping on it collapses a varied campaign into one
+row. Measured on one advertiser on 18 September 2026: the headline gave **1** apparent concept and the body text
+gave **20**. For an advertiser who writes a headline per ad it is a reasonable secondary key. It is never a safe
+primary one.
 
-`ad_creative_link_title` is the **landing page's own `<title>` tag**, so every ad pointing at one landing page
-carries the same string whatever the creative says. Group on it and a varied campaign collapses into one row.
+⚠️ **Two earlier versions of this file were wrong here, in the same direction.** The first said to group by
+creative title, which produced the 1-concept reading above. The second explained the rule by asserting that the
+link title "is the landing page's `<title>` tag". It is not; that was one advertiser's habit generalised into a
+field definition, which is the same mistake one layer down. Check a field's documented meaning before you build a
+rule on what you observed it doing once.
 
-**Measured on one advertiser, 18 September 2026, both ways:**
-
-| Grouping key | Concepts found |
-|---|---|
-| `ad_creative_link_title`, from the API | **1** |
-| The opening of the ad body, from the UI | **20** |
-
-Same advertiser, same day. The first number is an artifact of the key. The correct read was
-`76 ad objects · 20 distinct concepts · longest concept 52 days`, and their winner was legible because the oldest
-concept was also the most duplicated (17 of the 76 objects) and first in the impressions ordering: three
-independent signals agreeing.
-
-Take the span of the group, not of a single ad. Report three numbers:
+Report three numbers:
 
 ```
 pages · distinct concepts · longest span in days for one concept
 ```
 
-The third number is the one worth having. **If nobody in the category has kept a concept running for more
-than a week, the category has no survivorship signal to copy**, and that is an answer: you are on your own,
-and you should say so rather than invent a pattern.
+## What survivorship can and cannot tell you
 
-## What these endpoints cannot tell you
+**Oldest, most duplicated and top of the impressions sort are not three independent signals.** They are
+mechanically coupled: an older ad has had longer to accumulate delivery, and advertisers add duplicates to
+concepts they keep funding. When all three agree you have found the concept the advertiser has **funded longest
+and hardest**. Call it that. Do not call it the winner, and do not treat the agreement as three-fold
+confirmation, because it is closer to one fact seen from three angles.
 
-**They return newest first and offer no duration sort.** So the first page of results is a statement about
-the ordering, not about the market. A query whose estimated total runs into the thousands will hand you
-twenty rows from the last few days every time, and it is easy to read that as "nothing older is running".
-It is not. Any longest-span number you compute from one page of results is a **floor**, and it should be
-labelled as one. To make a real claim about longevity, use the UI: sort by impressions, read the start dates, or
-filter to ads that started before last month. Paging an API for the same answer is slower and still cannot rank
-them.
+A creative still running is evidence somebody is still paying for it. It is not evidence it is profitable, and an
+advertiser can leave a loser running out of neglect.
 
-Two more limits worth stating in the report:
+**Duplication does not defeat longevity.** Seven copies of one ad made in six seconds usually means one creative
+pushed into seven ad sets, and each of those can run for months. The measured example above has the **most**
+duplicated concept also running the **longest**. What duplication defeats is reading the age of a single ad
+object as the age of the concept behind it.
 
-- Spend and impression ranges are published only for political and issue ads. For a commercial ad you get
-  no performance data at all, which is why survivorship is the only signal available.
-- A creative still running is evidence somebody is still paying for it. It is not evidence it is profitable,
-  and an advertiser can leave a loser running out of neglect.
+**If you only used route 3, label the span a floor.** Wrapper endpoints tend to return newest first with no
+duration sort, so one page of results from a query with thousands of matches always looks like nothing older is
+running.
 
 ## What to record
 
-A table, in the report, with: the page, the creative concept, how many ad objects carry it, the earliest
-delivery start you saw, the span, and the snapshot URL for one example. Then one line on whether the
-category churns or holds, and which route you used, because the route determines what the span means.
+A table with: the page, the creative concept, how many ad objects carry it, the earliest delivery start you saw,
+the span, and a snapshot URL for one example. Then one line on whether the category churns or holds, and **which
+route you used**, because the route determines what the span and the grouping can mean.
+
+If nobody in the category has kept a concept running for more than a few weeks, say so plainly: the category has
+no survivorship signal to copy, and you are on your own. That is an answer, not a gap to fill with a pattern.
 
 ## The line you do not cross
 
-A competitor's live ad is a source for **shapes**: what kind of claim the category makes, what the offer
-looks like, how long a concept survives. Borrow the mechanism, never the execution. Copying a live ad's
-wording, art direction or joke is both a legal risk and, in practice, a worse ad, because it arrives second
-into an audience that has already seen it.
+A competitor's live ad is a source for **shapes**: what kind of claim the category makes, what the offer looks
+like, how long a concept survives. Borrow the mechanism, never the execution. Copying a live ad's wording, art
+direction or joke is both a legal risk and, in practice, a worse ad, because it arrives second into an audience
+that has already seen it.

@@ -38,9 +38,7 @@
 - Independent reviewers (which ones, how to run them in a sandbox, fallback order, reviewer budget or quota):
 - Analytics (web analytics property, backend tables for leads/payments, scripts):
 - Ad accounts (platform, account notes file; no secrets here):
-- Ad libraries, for competitors' live ads: read them in the public Meta Ad Library UI
-  (`facebook.com/ads/library`), which shows full ad body text and sorts by "Impressions: high to low"; it needs no
-  account; the Meta Ads MCP's library search is free if the agent has it; paid transparency endpoints cover
-  the Google, LinkedIn, Snapchat, TikTok and Twitter libraries. Record which route, where the key lives and
-  the price per request here, because a paid call needs a yes for that run.
+- Ad libraries, for competitors' live ads: which route you use, where any key lives, and the price per request,
+  because a paid call needs a yes for that run. The routes themselves and their limits live in the
+  newsjack-ads skill's ad-libraries reference; do not copy them here, they go stale.
 - Competitors to watch: the page names or handles worth reading, and the phrases a buyer would search for.
